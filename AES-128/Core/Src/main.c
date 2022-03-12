@@ -146,6 +146,7 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
   DWT_Init();
+  HAL_PWR_DisableSleepOnExit();
   HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON, PWR_STOPENTRY_WFI);
   /* USER CODE END 2 */
 
@@ -156,6 +157,7 @@ int main(void)
     if(sleep == 1)
     {
       sleep = 0;
+      HAL_SuspendTick();
       HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON, PWR_STOPENTRY_WFI);
     }
     /* USER CODE END WHILE */
@@ -206,6 +208,7 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+  HAL_ResumeTick();
 }
 
 /**
@@ -302,7 +305,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
         DWT_CYCCNT = 0;
         decrypt(decrypt_test, key, omass);
         time_act = DWT_CYCCNT;
-        HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
         time_transmit();
       }
       else count = 0;
